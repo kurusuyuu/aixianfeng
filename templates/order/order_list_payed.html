@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <h3>待收货订单列表</h3>
+
+    <ul>
+        <!--订单展示-->
+        {% for i in orders %}
+            <li>
+                <a href="#">
+                    <p><!-- 订单id -->{{i.id }}</p>
+                    {% for j in i.ordergoodsmodel_set.all %}
+                    <p><!-- 数量 -->{{ j.goods_num }}</p>
+                        <!--展示商品的名称-->
+                        <li>
+                            <img src="{{ j.goods.productimg }}" alt="">
+                        </li>
+                        <!--处理结束-->
+                        {% endfor %}
+                </a>
+            </li>
+        {% endfor %}
+        <!--订单处理结束-->
+
+    </ul>
+
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base_main.html' %}
+{% load static %}
+{% block extCSS %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'app/market/market.css' %}">
+{% endblock %}
+
+{% block EXTJS %}
+    <script type="text/javascript" src="{% static 'app/market/js/market.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/common/common.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="market">
+
+        <aside>
+
+            <ul>
+
+                <!--闪购分类展示-->
+                {% for i in foodtype %}
+                    <li>
+                        <!--链接地址，点击获取分类下的商品信息-->
+                        <a href="{% url 'shop:goods' i.typeid cid 0%}">{{ i.typename }}</a>
+                            {% ifequal i.typeid typeid %}
+                            <span class="yellowSlide"></span>
+                            {% endifequal %}
+                    </li>
+                {% endfor %}
+                <!--处理数据结束-->
+
+            </ul>
+
+        </aside>
+
+
+        <section>
+            <nav>
+                <ul>
+                    <li id="all_types"><span>全部类型<span id="all_type_logo"
+                                                       class="glyphicon glyphicon-chevron-down"></span></span></li>
+                    <li id="sort_rule"><span>综合排序<span id="sort_rule_logo" class="glyphicon glyphicon-chevron-down"></span></span></li>
+                </ul>
+            </nav>
+
+            <menu>
+                <ul>
+                    {% for g in goods %}
+                    <!--商品信息展示-->
+                        <li>
+                            <a href="#">
+
+                                <img src="{{ g.productimg }}" alt="">
+                                <div class="shoppingInfo">
+                                    <h6>{{ g.productlongname }}</h6>
+                                    <p class="detailTag">
+                                        <span>精选</span>
+                                        <span></span>
+                                    </p>
+                                    <p class="unit">
+                                        {{ g.specifics }}
+                                    </p>
+                                    <p class="price">
+                                        <span>¥{{ g.price}}</span>
+                                        <s>¥{{ g.marketprice }}</s>
+                                    </p>
+
+                                </div>
+
+                            </a>
+                        <section>
+                            {% csrf_token %}
+                            <button onclick="subShop({{ g.id }})">-</button>
+                            <span id="num_{{ g.id }}">0</span>
+                            <button onclick="addShop({{ g.id }})">+</button>
+                        </section>
+
+                        </li>
+
+                    <!--处理数据结束-->
+
+                    {% endfor %}
+                </ul>
+
+                <div id="all_types_container">
+                    <div>
+                        <!--加载全部分类的数据-->
+                        {% for i in typelist  %}
+                            <a href="{% url 'shop:goods' typeid i.1 0 %}">
+                                <span>{{ i.0}}</span>
+                            </a>
+                        {% endfor %}
+                        <!--处理数据结束-->
+
+
+                    </div>
+                </div>
+
+
+                <div id="sort_container">
+                    <div>
+{#      排序传递的也是状态码   0 , 1 ,2  , 3 ,4 ,5...                    #}
+                        <a href="{% url 'shop:goods' typeid cid 0 %}">
+                            <span>综合排序</span>
+                        </a>
+                        <a href="{% url 'shop:goods' typeid cid 1 %}">
+                            <span>销量排序</span>
+                        </a>
+                        <a href="{% url 'shop:goods' typeid cid 2 %}">
+                            <span>价格降序</span>
+                        </a>
+                        <a href="{% url 'shop:goods' typeid cid 3 %}">
+                            <span>价格升序</span>
+                        </a>
+
+                    </div>
+                </div>
+
+            </menu>
+
+        </section>
+
+
+    </div>
+
+
+{% endblock %}
